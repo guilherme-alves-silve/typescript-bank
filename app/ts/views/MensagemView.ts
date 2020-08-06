@@ -1,4 +1,6 @@
-class MensagemView extends View<string> {
+import { View } from "./View";
+
+export class MensagemView extends View<string> {
 
     update(mensagem: string): void {
         super.update(mensagem);
