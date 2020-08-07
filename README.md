@@ -21,6 +21,21 @@ Projeto que usa como principal tecnologia JavaScript e TypeScript.
 * back-end: Contém um servidor simples que usa lite-server para retornar dados estáticos
 * front-end: Implementação do cadastro de negociações
 
+## Front-End
+
+Utiliza:
+* herança
+* interface
+* decorator:
+    * throttle
+    * injection
+    * log tempo execução
+* barril
+* null check
+* type check
+* mvc
+* acesso web-service
+
 ## Executar o projeto
 
 ``npm start``
