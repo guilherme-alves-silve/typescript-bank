@@ -1,5 +1,5 @@
-import { logarInputOutput, logarTempoDeExecucao, domLazyInject } from "../helpers/decorators/index";
-import { Negociacao, Negociacoes } from "../models/index";
+import { logarInputOutput, logarTempoDeExecucao, domLazyInject, throttle } from "../helpers/decorators/index";
+import { Negociacao, Negociacoes, NegociacaoParcial } from "../models/index";
 import { NegociacoesView, MensagemView } from "../views/index";
 
 export class NegociacaoController {
@@ -23,11 +23,10 @@ export class NegociacaoController {
         this._negociacoesView.update(this._negociacoes);
     }
 
+    @throttle()
     @logarInputOutput()
     @logarTempoDeExecucao(true)
     adiciona(event: Event): void {
-
-        event.preventDefault();
 
         const data = new Date(this._inputData.val().replace(/-/g, ","));
         if (!this._ehDiaUtil(data)) {
@@ -44,6 +43,29 @@ export class NegociacaoController {
         this._negociacoes.adiciona(negociacao);
         this._negociacoesView.update(this._negociacoes);
         this._mensagemView.update("Negociação adicionada com sucesso!");
+    }
+
+    @throttle()
+    importaDados() {
+
+        function isOk(res: Response) {
+            if (res.ok) {
+                return res;
+            }
+
+            throw new Error(res.statusText);
+        }
+
+        fetch('http://localhost:8080/dados')
+        .then(res => isOk(res))
+        .then(res => res.json())
+        .then((dados: NegociacaoParcial[]) => {
+            dados
+                .map(dado => new Negociacao(new Date(), dado.vezes, dado.montante))
+                .forEach(negociacao => this._negociacoes.adiciona(negociacao));
+            this._negociacoesView.update(this._negociacoes);
+        })
+        .catch(error => console.log(error.message));
     }
 
     private _ehDiaUtil(data: Date) {
