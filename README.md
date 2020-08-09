@@ -26,6 +26,7 @@ Projeto que usa como principal tecnologia JavaScript e TypeScript.
 Utiliza:
 * herança
 * interface
+* polimorfismo
 * decorator:
     * throttle
     * injection
@@ -34,7 +35,7 @@ Utiliza:
 * null check
 * type check
 * mvc
-* acesso web-service
+* fetch web-service
 
 ## Executar o projeto
 
