@@ -39,4 +39,4 @@ Utiliza:
 
 ## Executar o projeto
 
-``npm start``
+``sh execute.sh``
