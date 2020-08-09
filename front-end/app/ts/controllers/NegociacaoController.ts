@@ -66,11 +66,17 @@ export class NegociacaoController {
             .then((negociacoesParaImportar: Negociacao[]) => {
                 
                 const negociacoesJaImportadas = this._negociacoes.paraArray();
+                let importacoes: boolean[] = [];
 
                 negociacoesParaImportar
                 .filter(negociacao => !negociacoesJaImportadas.some(jaImportada => jaImportada.ehIgual(negociacao)))
-                .forEach(negociacao => this._negociacoes.adiciona(negociacao));
-                this._negociacoesView.update(this._negociacoes);
+                .forEach(negociacao => importacoes.push(this._negociacoes.adiciona(negociacao)));
+
+                if (importacoes.some(importacao => importacao)) {
+                    this._negociacoesView.update(this._negociacoes);
+                } else {
+                    this._mensagemView.update("Nenhuma nova importação foi realizada!");
+                }
             });
     }
 

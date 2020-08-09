@@ -1,6 +1,6 @@
-import { Imprimivel, Igualavel } from "./index"
+import { Objeto } from "./Objeto"
 
-export class Negociacao implements Imprimivel, Igualavel<Negociacao> {
+export class Negociacao implements Objeto<Negociacao> {
 
     constructor(
         readonly data: Date, 
@@ -28,7 +28,8 @@ export class Negociacao implements Imprimivel, Igualavel<Negociacao> {
 
         return this.data.getDate() == negociacao.data.getDate()
             && this.data.getMonth() == negociacao.data.getMonth()
-            && this.data.getFullYear() == negociacao.data.getFullYear();
-
+            && this.data.getFullYear() == negociacao.data.getFullYear()
+            && this.quantidade == negociacao.quantidade
+            && this.valor == negociacao.valor;
     }
 }
