@@ -54,30 +54,31 @@ export class NegociacaoController {
     }
 
     @throttle()
-    importaDados() {
+    async importaDados() {
 
-        this._negociacaoService.obterNegociacoes(res => {
+            const negociacoesParaImportar = await this._negociacaoService.obterNegociacoes(res => {
                 if (res.ok) {
                     return res;
                 }
 
                 throw new Error(res.statusText);
             })
-            .then((negociacoesParaImportar: Negociacao[]) => {
-                
-                const negociacoesJaImportadas = this._negociacoes.paraArray();
-                let importacoes: boolean[] = [];
 
-                negociacoesParaImportar
-                .filter(negociacao => !negociacoesJaImportadas.some(jaImportada => jaImportada.ehIgual(negociacao)))
-                .forEach(negociacao => importacoes.push(this._negociacoes.adiciona(negociacao)));
+            const negociacoesJaImportadas = this._negociacoes.paraArray();
+            let importacoes: boolean[] = [];
 
-                if (importacoes.some(importacao => importacao)) {
-                    this._negociacoesView.update(this._negociacoes);
-                } else {
-                    this._mensagemView.update("Nenhuma nova importação foi realizada!");
-                }
-            });
+            negociacoesParaImportar
+            .filter(negociacao => !negociacoesJaImportadas.some(jaImportada => jaImportada.ehIgual(negociacao)))
+            .forEach(negociacao => importacoes.push(this._negociacoes.adiciona(negociacao)));
+
+            if (importacoes.some(importacao => importacao)) {
+                this._negociacoesView.update(this._negociacoes);
+            } else {
+                this._mensagemView.update("Nenhuma nova importação foi realizada!");
+            }
+        } catch(error: Error) {
+                this._mensagemView.update(error.message);
+        }
     }
 
     private _ehDiaUtil(data: Date) {
